@@ -35,7 +35,7 @@ app.post("/", function(req, res) {
         case "/": rslt = x / y; break;
         default: rslt = "Oops!"
     }
-    /*switch (req.body.mathMethod) {
+    switch (req.body.mathMethod) {
         case "+":case "-":case "*":case "/":
         log = x + " " + req.body.mathMethod + " " + y + " = " + rslt;
         MongoClient.connect(url, function(err, db) {
@@ -46,7 +46,7 @@ app.post("/", function(req, res) {
                 db.close();
             })
         })
-    }*/
+    }
     res.render("index", {
         mathResult: rslt,
     })
@@ -55,7 +55,7 @@ app.post("/", function(req, res) {
 var server = app.listen(8081, function() {
     var host = server.address().address
     var port = server.address().port
-    /*
+
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         db.createCollection("MathLogs", function(err, res) {
@@ -63,7 +63,7 @@ var server = app.listen(8081, function() {
             console.log("collection created!");
             db.close();
         });
-    })*/
+    })
 
     console.log("I'm host " + host + ", port " + port + ". I'm listening...");
 })

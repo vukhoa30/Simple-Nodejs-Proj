@@ -52,7 +52,7 @@ app.post("/", function(req, res) {
     })
 })
 
-var server = app.listen(8081, function() {
+var server = app.listen(process.env.PORT || 8081, function() {
     var host = server.address().address
     var port = server.address().port
     /*

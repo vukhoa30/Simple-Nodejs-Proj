@@ -13,7 +13,8 @@ app.use(express.static('public'));
 app.use("/component", express.static("bower_components"));
 
 var MongoClient = mongodb.MongoClient;
-var url = "mongodb://localhost:27017/mydb"//"mongodb://" + "localhost" + ":" + "21017" + "/" + dbname;
+var url = "mongodb://vu_khoa30:2444@ds149201.mlab.com:49201/mydb";
+//var url = "mongodb://localhost:27017/mydb";
     
 app.get("/", function(req, res) {
     res.render("index", {
@@ -21,7 +22,19 @@ app.get("/", function(req, res) {
     })
 })
 app.get("/process", function(req, res) {
-    res.render("process", {data: req.query.sample_text});
+    var logs;
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        db.collection("MathLogs").find({}).toArray(function(err, rslt) {
+            if (err) throw err;
+            logs = rslt;
+            db.close();
+            res.render("process", {
+                data: req.query.sample_text,
+                logs: logs
+            });
+        })
+    })
 })
 app.post("/", function(req, res) {
     var rslt = 0;
@@ -35,18 +48,18 @@ app.post("/", function(req, res) {
         case "/": rslt = x / y; break;
         default: rslt = "Oops!"
     }
-    /*switch (req.body.mathMethod) {
+    switch (req.body.mathMethod) {
         case "+":case "-":case "*":case "/":
         log = x + " " + req.body.mathMethod + " " + y + " = " + rslt;
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             db.collection("MathLogs").insertOne({log: log, time: Date()}, function (err, res) {
                 if (err) throw err;
-                console.log(res.result);
+                console.log("Successfully Inserted!");
                 db.close();
             })
         })
-    }*/
+    }
     res.render("index", {
         mathResult: rslt,
     })
@@ -55,7 +68,7 @@ app.post("/", function(req, res) {
 var server = app.listen(process.env.PORT || 8081, function() {
     var host = server.address().address
     var port = server.address().port
-    /*
+    
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         db.createCollection("MathLogs", function(err, res) {
@@ -63,7 +76,7 @@ var server = app.listen(process.env.PORT || 8081, function() {
             console.log("collection created!");
             db.close();
         });
-    })*/
+    })
 
     console.log("I'm host " + host + ", port " + port + ". I'm listening...");
 })

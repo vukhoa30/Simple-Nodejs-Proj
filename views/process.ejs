@@ -7,5 +7,12 @@
       Sent text: <%= data %>
     </h1>
     <a href="/">Go back to where we were</a>
+    <h2>Math Logs:</h2>
+    <ul>
+    <% logs.forEach(function(item) { %>
+      <li><%= item['time'] %>: <%= item['log'] %></li>
+    <% }); %>
+    </ul>
+    
   </body>
 </html>

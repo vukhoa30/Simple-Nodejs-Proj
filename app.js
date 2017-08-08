@@ -22,19 +22,9 @@ app.get("/", function(req, res) {
     })
 })
 app.get("/process", function(req, res) {
-    var logs;
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        db.collection("MathLogs").find({}).toArray(function(err, rslt) {
-            if (err) throw err;
-            logs = rslt;
-            db.close();
-            res.render("process", {
-                data: req.query.sample_text,
-                logs: logs
-            });
-        })
-    })
+    res.render("process", {
+        data: req.query.sample_text
+    });
 })
 app.post("/", function(req, res) {
     var rslt = 0;
@@ -64,6 +54,16 @@ app.post("/", function(req, res) {
         mathResult: rslt,
     })
 })
+app.post("/ajax", function(req, res) {
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        db.collection("MathLogs").find({}).toArray(function(err, rslt) {
+            if (err) throw err;
+            db.close();
+            res.send(rslt);
+        })
+    })
+});
 
 var server = app.listen(process.env.PORT || 8081, function() {
     var host = server.address().address
@@ -73,7 +73,7 @@ var server = app.listen(process.env.PORT || 8081, function() {
         if (err) throw err;
         db.createCollection("MathLogs", function(err, res) {
             if (err) throw err;
-            console.log("collection created!");
+            console.log("Collection created (connected)!");
             db.close();
         });
     })

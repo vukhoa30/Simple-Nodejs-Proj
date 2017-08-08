@@ -18,13 +18,39 @@
       <% if (mathResult) { %>
         <h3>Result: <%= mathResult %></h3>
       <% } %>
-      <img id="clickthispls" src="/image1.png" style="width:50px; height:50px;">
+      <div id="select_div"><a href="#" id="select_link">Load Math Logs</a></div> 
+      <img id="clickthispls" title="click to use jQuery to hide image" src="/image1.png" style="width:50px; height:50px;">
       <script src="/component/bootstrap/dist/js/bootstrap.min.js"></script>
       <script src="/component/jquery/dist/jquery.min.js"></script>
       <script>
-        $(document).ready(function() {
+        $(function() {
           $("#clickthispls").on("click", function() {
             $(this).css("display", "none");
+          })
+          $('#select_link').click(function(e){
+            e.preventDefault();
+            console.log('select_link clicked');
+            var data = {};
+            data.title = "title";
+            data.message = "message";
+            $("#select_div").html("Loading, please wait...");
+
+            $.ajax({
+              type: 'POST',
+              data: JSON.stringify(data),
+              contentType: 'application/json',
+              url: '/ajax',						
+              success: function(data) {
+                console.log(JSON.stringify(data));
+                var str = "<h2>Math Logs:</h2><ul>";
+                for (var i = 0; i < data.length; i++) {
+                  var item = data[i];
+                  str += "<li>" + item['time'] + ": " + item['log'] + "</li>";
+                }
+                str += "</ul>";
+                $("#select_div").html(str);
+              }
+            });
           })
         })
       </script>

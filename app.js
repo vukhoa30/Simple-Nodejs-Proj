@@ -13,8 +13,8 @@ app.use(express.static('public'));
 app.use("/component", express.static("bower_components"));
 
 var MongoClient = mongodb.MongoClient;
-var url = "mongodb://vu_khoa30:2444@ds149201.mlab.com:49201/mydb";
-//var url = "mongodb://localhost:27017/mydb";
+//var url = "mongodb://vu_khoa30:2444@ds149201.mlab.com:49201/mydb";
+var url = "mongodb://localhost:27017/mydb";
     
 app.get("/", function(req, res) {
     res.render("index", {
